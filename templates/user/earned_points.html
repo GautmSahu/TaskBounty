@@ -1,0 +1,33 @@
+{% extends "user/base.html" %}
+{% block content %}
+<h2>Points Earned</h2>
+
+{% if user_tasks %}
+<h3>Total Points Earned: {{ total_points }}</h3>
+    <table border="1" class="table">
+        <thead>
+            <tr>
+                <th>Logo</th>
+                <th>App Name</th>
+                <th>Category</th>
+                <th>Sub-Category</th>
+                <th>Points Earned</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in user_tasks %}
+            <tr>
+                <td><img src="{{ task.app.logo.url }}" alt="{{ task.app.name }} Logo" width="50"></td>
+                <td>{{ task.app.name }}</td>
+                <td>{{ task.app.category }}</td>
+                <td>{{ task.app.sub_category }}</td>
+                <td>{{ task.points }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>You haven't completed any tasks yet.</p>
+{% endif %}
+
+{% endblock %}

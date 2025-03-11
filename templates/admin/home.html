@@ -1,0 +1,35 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+    <h2>Welcome, {{ user.username }}</h2>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Sub-Category</th>
+            <th>Points</th>
+            <th>Actions</th>
+        </tr>
+        {% if apps %}
+            {% for app in apps %}
+            <tr>
+                <td>{{ app.name }}</td>
+                <td>{{ app.category }}</td>
+                <td>{{ app.sub_category }}</td>
+                <td>{{ app.points }}</td>
+                <td>
+                    <a href="{% url 'app_update' app.pk %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url 'app_delete' app.pk %}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="5">
+                    <h4 align="center">No Data</h3>
+                </td>
+            </tr>
+        {% endif %}
+
+    </table>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "user/base.html" %}
+{% block content %}
+<h2>All Apps</h2>
+
+{% if apps %}
+    <table border="1" class="table">
+        <thead>
+            <tr>
+                <th>Logo</th>
+                <th>App Name</th>
+                <th>Category</th>
+                <th>Sub-Category</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in apps %}
+            <tr>
+                <td><img src="{{ app.logo.url }}" alt="{{ app.name }} Logo" width="50"></td>
+                <td>{{ app.name }}</td>
+                <td>{{ app.category }}</td>
+                <td>{{ app.sub_category }}</td>
+                <td>{{ app.points }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No apps available.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "user/base.html" %}
+{% block content %}
+<h2>Available Tasks</h2>
+
+{% if available_apps %}
+    <table border="1" class="table">
+        <thead>
+            <tr>
+                <th>Logo</th>
+                <th>App Name</th>
+                <th>Category</th>
+                <th>Sub-Category</th>
+                <th>Take Task</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in available_apps %}
+            <tr>
+                <td><img src="{{ app.logo.url }}" alt="{{ app.name }} Logo" width="50"></td>
+                <td>{{ app.name }}</td>
+                <td>{{ app.category }}</td>
+                <td>{{ app.sub_category }}</td>
+                <td><a href="{% url 'take_task' app.id %}" class="btn btn-primary">Take Task</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No tasks available.</p>
+{% endif %}
+
+{% endblock %}

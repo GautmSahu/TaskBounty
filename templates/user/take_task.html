@@ -1,0 +1,114 @@
+{% extends "user/base.html" %}
+{% block content %}
+<h2>Take Task</h2>
+
+<div class="card">
+    <div class="card-body">
+        <h4>{{ app.name }}</h4>
+        <img src="{{ app.logo.url }}" alt="{{ app.name }} Logo" width="100">
+        <p><strong>Category:</strong> {{ app.category }}</p>
+        <p><strong>Sub-Category:</strong> {{ app.sub_category }}</p>
+        <p><a href="{{ app.link }}" target="_blank" class="btn btn-info">Download App</a></p>
+    </div>
+</div>
+
+<h3>Upload Screenshot</h3>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div id="drop_zone" class="drop-zone">
+        <p id="drop_text">Upload Screenshots  to complete the Task</p>
+        <input type="file" name="screenshot" id="file_input" hidden accept="image/*">
+    </div>
+    <button type="submit" class="btn btn-success mt-3">Submit Task</button>
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    let dropZone = document.getElementById("drop_zone");
+    let fileInput = document.getElementById("file_input");
+    let dropText = document.getElementById("drop_text");
+
+    let draggedFile = null;  // Store dragged file
+
+    if (!dropZone || !fileInput || !dropText) {
+        console.error("Drop zone or file input not found!");
+        return;
+    }
+
+    // Prevent default behaviors
+    ["dragenter", "dragover", "dragleave", "drop"].forEach(event => {
+        document.body.addEventListener(event, e => e.preventDefault());
+    });
+
+    // Store the file when dragged over
+    dropZone.addEventListener("dragover", function (e) {
+        dropZone.classList.add("dragover");
+        if (e.dataTransfer.items.length > 0) {
+            draggedFile = e.dataTransfer.items[0].getAsFile(); // Store file before switching tabs
+        }
+    });
+
+    // Remove highlight when drag leaves
+    dropZone.addEventListener("dragleave", function () {
+        dropZone.classList.remove("dragover");
+    });
+
+    // Handle file drop
+    dropZone.addEventListener("drop", function (e) {
+        dropZone.classList.remove("dragover");
+
+        let file = e.dataTransfer.files.length > 0 ? e.dataTransfer.files[0] : draggedFile;
+
+        if (file) {
+            let dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files; // Set file to input
+
+            dropText.innerHTML = `<strong>${file.name}</strong> selected`;
+            console.log("File selected via drag and drop:", file.name);
+        } else {
+            console.error("No file was dropped. Possibly due to tab switch.");
+        }
+
+        // Reset draggedFile after drop
+        draggedFile = null;
+    });
+
+    // Handle manual file selection
+    fileInput.addEventListener("change", function () {
+        if (fileInput.files.length > 0) {
+            dropText.innerHTML = `<strong>${fileInput.files[0].name}</strong> selected`;
+            console.log("File selected manually:", fileInput.files[0].name);
+        }
+    });
+
+    // Click drop zone to trigger file picker
+    dropZone.addEventListener("click", function () {
+        fileInput.click();
+    });
+
+    // Detect when tab is focused again (recover file if needed)
+    window.addEventListener("focus", function () {
+        if (draggedFile) {
+            console.warn("Recovered file after tab switch:", draggedFile.name);
+        }
+    });
+});
+
+</script>
+
+<style>
+    .drop-zone {
+        width: 100%;
+        padding: 20px;
+        border: 2px dashed #007bff;
+        text-align: center;
+        cursor: pointer;
+        background-color: #f8f9fa;
+    }
+    .drop-zone.dragover {
+        background-color: #e0f7fa;
+    }
+</style>
+
+{% endblock %}
