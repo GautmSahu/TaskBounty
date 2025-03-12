@@ -34,7 +34,7 @@ This project provides a RESTful API and GUI for managing apps and user points us
 
 ## 📌 Installation
 
-## **Installation & Setup on local system without docker (ubuntu)**
+## **Installation & Setup on local system (ubuntu)**
 
 1. Clone git repo
     - git clone repository-url
@@ -62,7 +62,7 @@ This project provides a RESTful API and GUI for managing apps and user points us
     - python manage.py migrate
 10. Run the django server
     - python manage.py runserver
-    - Check the api's with the help of postman collection providedd above
+    - Check the api's with the help of postman collection providedd below
 11. That's it.
 
 ---
@@ -481,6 +481,9 @@ The API endpoints and their details can be found in the following collection:
 1. Click **Save, rebuild and deploy** to apply the changes.  
 2. Your app will now be live!  
 
+## 5. Live links
+1. [Site Link](https://taskbounty-pufe.onrender.com/auth/login/)
+1. [Assessment Overview Video](https://drive.google.com/file/d/1jBQOncXJcKLtPwhLkh3oQ1Z3kD3tI0T5/view?usp=sharing)
 ---
 
 ### Automatic Deployment  
