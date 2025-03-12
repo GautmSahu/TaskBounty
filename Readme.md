@@ -74,7 +74,17 @@ This project provides a RESTful API and GUI for managing apps and user points us
   ```
   Authorization: Token YOUR_AUTH_TOKEN
   ```
-- **Get Token**:
+- **Various Endpoints**
+  - You can visit below urls from browser:
+    - auth/registration/ -> To register new user
+    - auth/password/reset/ -> To reset password
+    - auth/password/reset/confirm/ -> To confirm reset password
+    - auth/login/ -> To login
+    - auth/logout/ -> To logut
+    - auth/user/ -> Get user detail
+    - auth/password/change/ -> To change password
+
+- **Example(Get Token)**:
   - **Endpoint**: `POST /auth/login/`
   - **Body (JSON)**:
     ```json
@@ -89,7 +99,10 @@ This project provides a RESTful API and GUI for managing apps and user points us
       "key": "your_generated_token"
     }
     ```
-
+# **Note**
+  - Use below creds for admin login(To Manage apps)
+  - username: admin
+  - password: admin
 ---
 
 ## API Collection
@@ -387,5 +400,91 @@ The API endpoints and their details can be found in the following collection:
   }
   ```
 ---
+
+## Questions asked
+1. Write and share a small note about your choice of system to schedule periodic tasks (such as downloading a list of ISINs every 24 hours). Why did you choose it? Is it reliable enough; Or will it scale? If not, what are the problems with it? And, what else would you recommend to fix this problem at scale in production?
+  - Ans: For scheduling periodic tasks in Django, Celery with Redis as a message broker is a popular and reliable choice.
+
+     - Why Celery?
+     - Asynchronous & Distributed – Celery is designed for handling background tasks asynchronously, allowing Django to remain responsive.
+     - Scalability – It can scale horizontally by adding more worker nodes, making it suitable for high-load production environments.
+     - Periodic Task Scheduling – Works well with Celery Beat, allowing us to schedule tasks (like downloading ISINs every 24 hours) in a cron-like fashion.
+     - Retries & Error Handling – If a task fails (e.g., network issue during ISIN download), Celery can retry it automatically.
+     - Monitoring – Supports monitoring tools like Flower to track task execution.
+     - Is It Reliable and Scalable?
+     - Yes, Celery is reliable and scalable when properly configured with Redis/RabbitMQ as a broker 
+     - However, at extreme scale, Redis as a broker may cause memory issues if too many tasks are queued.
+     - Celery requires worker processes, which means more servers for scaling.
+     - Alternatives for Production at Scale
+     - If Celery doesn’t scale well at very high loads:
+     - Apache Kafka – If tasks involve real-time streaming of events.
+     - Kubernetes CronJobs – If running in a Kubernetes environment, for high availability.
+     - For most Django applications, Celery + Redis is the best balance of simplicity, reliability, and scalability.
+
+2. In what circumstances would you use Flask instead of Django and vice versa? 
+  - Ans: 
+
+    - When to Use Flask?
+       - Lightweight APIs or Microservices – If we just need a REST API with minimal setup.
+       - Prototyping & Proof of Concept – Quick development without unnecessary complexity.
+       - Machine Learning Models – Deploying AI models via API.
+       - Custom architectures – When we want full control over your tech stack.
+
+    - When to Use Django?
+       - Rapid Development – Built-in authentication, ORM, admin panel save time.
+       - Complex & Scalable Apps – Like e-commerce platforms, dashboards, CMS.
+       - Security-Critical Applications – Django provides security features like CSRF protection, SQL injection prevention by default.
+       - Database-heavy applications – Django ORM simplifies complex database interactions.
+
+---
+
+# Deployment Guide for Render
+
+## 1. Create a PostgreSQL Database  
+1. Navigate to **Render Dashboard** and select **Databases**.  
+2. Click **Create a New Database**.  
+3. Enter the following details:  
+   - **Instance Name**: `<your_instance_name>`  
+   - **Database Name**: `<your_db_name>`  
+   - **Database User**: `<your_db_user>`  
+   - **Region**: `<your_preferred_region>`  
+   - **PostgreSQL Version**: `<your_preferred_version>`  
+4. Click **Create Database**.  
+5. Once the database is created, copy the **External Database URL**.  
+6. Add the database details in the environment file (`.env`):    
+7. Run migrations from your local machine:  
+   ```sh
+   python manage.py makemigrations && python manage.py migrate
+   ```
+
+## 2. Create a Web Service  
+1. Navigate to **Render Dashboard** and select **Web Services**.  
+2. Click **New Web Service**.  
+3. Select the GitHub repository that holds your app code.  
+4. Enter the following details:  
+   - **Project Name**: `<your_project_name>`  
+   - **Language**: `Python 3`  
+   - **Git Branch**: `<your_branch_name>`  
+   - **Region**: `<your_preferred_region>`  
+   - **Start Command**:  
+     ```sh
+     gunicorn ProjectName.wsgi
+     ```  
+5. Click **Create Web Service**.  
+
+## 3. Configure Environment Variables  
+1. Go to the **Environment** tab of the Web Service.  
+2. Add all necessary environment variables.  
+3. Click **Save Changes**.  
+
+## 4. Rebuild and Deploy  
+1. Click **Save, rebuild and deploy** to apply the changes.  
+2. Your app will now be live!  
+
+---
+
+### Automatic Deployment  
+**Every code push to the repository triggers an automatic deployment, ensuring seamless and efficient updates.**  
+
 
 ## Thank you! 😊
