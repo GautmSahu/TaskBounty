@@ -4,7 +4,7 @@ This project provides a RESTful API and GUI for managing apps and user points us
 ---
 
 ## 📌 Features
-- **Authentication** using Django Allauth (Token-based)
+- **Authentication using Django Allauth (Token-based)**
 - **Admin Panel for managing apps**
 - **User Panel for tracking points & submitting task proofs**
 - **API Endpoints for creating, reading, updating, and deleting apps**
