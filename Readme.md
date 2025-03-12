@@ -30,7 +30,9 @@ This project provides a RESTful API and GUI for managing apps and user points us
   {
     "detail": "You do not have permission to perform this action."
   }
+  ```
   OR
+  ```json
   Permission Denied.
   ```
 
